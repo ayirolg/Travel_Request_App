@@ -1,0 +1,47 @@
+/* You can add global styles to this file, and also import other style files */
+/* Box shadow for the card */
+.card {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); 
+  }
+  /* Font Roboto */
+  .roboto {
+      font-family: "Inter", sans-serif;
+      font-size: normal;
+      font-weight: normal;
+      font-style: normal;
+    }
+  /* Bg color to login page  */
+    .login-body {
+      background-color: #d7d5e6;
+      height: 100vh;
+      background-image: url('/assets/bg-imag.jpg');
+    }
+  .bg-black{
+    background-color: black;
+  }
+  /* Bg color to input tag */
+  .input-color{
+      background-color: rgb(236, 255, 222);
+    }
+  /* Text green color */
+  .color-green{
+      color:#7cbc44;
+  }
+  /* customised green button */
+  .btn-green{
+      background-color:#7cbc44;
+      color: white;
+      text-decoration: none;
+      border-color: #7cbc44;
+    --bs-btn-hover-color: #7cbc44;
+    --bs-btn-hover-bg: #7cbc447;
+    --bs-btn-hover-border-color: #7cbc44;
+    --bs-btn-focus-shadow-rgb: #599128;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #7cbc44;
+    --bs-btn-active-border-color: #7cbc44;
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color: #fff;
+    --bs-btn-disabled-bg: #7cbc44;
+    --bs-btn-disabled-border-color: #7cbc44;
+  }
