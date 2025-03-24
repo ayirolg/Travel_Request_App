@@ -1,0 +1,12 @@
+<!-- admin_approved_mail.html -->
+<p>Dear Admin,</p>
+<p>A travel request has been <strong>approved</strong> by the manager.</p>
+<p>Employee: {{ employee_name }}</p>
+<p>Details: </p>
+<ul>
+    <li>From: {{ ticket_request.from_location }}</li>
+    <li>To: {{ ticket_request.to_location }}</li>
+    <li>Travel Dates: {{ ticket_request.travel_from }} - {{ ticket_request.travel_to }}</li>
+    <li>Manager Note: {{ ticket_request.manager_note }}</li>
+</ul>
+<p>Please proceed with the next steps.</p>

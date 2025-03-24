@@ -1,0 +1,10 @@
+<p>Dear {{ ticket_request.employee.user.first_name }},</p>
+<p>Your travel request has been <b>approved</b>.</p>
+<p>Details:</p>
+<ul>
+    <li>From: {{ ticket_request.from_location }}</li>
+    <li>To: {{ ticket_request.to_location }}</li>
+    <li>Travel Dates: {{ ticket_request.travel_from }} - {{ ticket_request.travel_to }}</li>
+    <li>Manager Note: {{ ticket_request.manager_note }}</li>
+</ul>
+<p>Thank you.</p>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>More Info Requested</title>
+</head>
+<body>
+    <p>Dear Admin,</p>
+    <p>The manager <strong>{{ manager_name }}</strong> has requested additional information from 
+    <strong>{{ employee_name }}</strong> regarding their travel request (ID: {{ ticket_request.id }}).</p>
+    <p><strong>Request Details:</strong></p>
+    <ul>
+        <li><strong>From:</strong> {{ ticket_request.from_location }}</li>
+        <li><strong>To:</strong> {{ ticket_request.to_location }}</li>
+        <li><strong>Travel Date:</strong> {{ ticket_request.travel_from }} to {{ ticket_request.travel_to }}</li>
+    </ul>
+    <p><strong>Additional Request:</strong> {{ additional_request }}</p>
+    <p>Please review and take necessary action.</p>
+    <p>Best regards,<br>Your System</p>
+</body>
+</html>

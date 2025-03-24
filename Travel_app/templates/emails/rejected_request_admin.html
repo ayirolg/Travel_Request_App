@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Travel Request Rejected</title>
+</head>
+<body>
+    <p>Dear Admin,</p>
+    <p>The manager <strong>{{ manager_name }}</strong> has <strong>rejected</strong> the travel request 
+    (ID: {{ ticket_request.id }}) for <strong>{{ employee_name }}</strong>.</p>
+    <p><strong>Rejection Note:</strong> {{ note }}</p>
+    <p><strong>Request Details:</strong></p>
+    <ul>
+        <li><strong>From:</strong> {{ ticket_request.from_location }}</li>
+        <li><strong>To:</strong> {{ ticket_request.to_location }}</li>
+        <li><strong>Travel Date:</strong> {{ ticket_request.travel_from }} to {{ ticket_request.travel_to }}</li>
+    </ul>
+    <p>Please review and take necessary action.</p>
+    <p>Best regards,<br>Your System</p>
+</body>
+</html>
