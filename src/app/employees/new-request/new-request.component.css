@@ -1,0 +1,17 @@
+.btn-green{
+    background-color:#7cbc44;
+    color: white;
+    text-decoration: none;
+    border-color: #7cbc44;
+  --bs-btn-hover-color: #7cbc44;
+  --bs-btn-hover-bg: #7cbc447;
+  --bs-btn-hover-border-color: #7cbc44;
+  --bs-btn-focus-shadow-rgb: #599128;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #7cbc44;
+  --bs-btn-active-border-color: #7cbc44;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: #7cbc44;
+  --bs-btn-disabled-border-color: #7cbc44;
+}

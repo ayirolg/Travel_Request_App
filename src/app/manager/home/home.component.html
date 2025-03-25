@@ -1,0 +1,153 @@
+    <div class="roboto">
+    <!-- Header  -->
+    <header>
+    <nav class="navbar navbar-expand-md fixed-top bg-dark navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+            <img src="assets/ReflectionsLogo.da68fb05.svg" alt="Bootstrap">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                <a class="nav-link active color-green fw-bold" aria-current="page" href="#">Home</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <button class="nav-link color-green fw-bold btn btn-link p-0 border-0" aria-current="page" (click)="logout()" >Logout</button>                
+                </li>
+            </ul>
+            </div>
+        </div>
+    </nav>
+    </header>
+    <!-- Main Container -->
+    <main class="container-fluid" style="margin-top: 60px;">
+        <div class="row">
+            <div class="col-12">
+                <form class="d-flex my-2 align-items-center" role="search" [formGroup]="filterForm">
+                    <input class="form-control me-2" type="search" formControlName="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-green fw-bold mxl-1" type="button" (click)="fetchRequests()">Search</button>
+                    
+                    <!-- Filter Button -->
+                    <button class="btn btn-green fw-bold mx-1" type="button" data-bs-toggle="modal" data-bs-target="#filter">Filter</button>
+                    
+                    <!-- Sort Dropdown -->
+                    <div class="dropdown">
+                        <button class="btn btn-green dropdown-toggle mx-1 fw-bold" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Sort
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><button class="dropdown-item" (click)="setSort('name_asc')">Name Ascending</button></li>
+                            <li><button class="dropdown-item" (click)="setSort('name_desc')">Name Descending</button></li>
+                            <li><button class="dropdown-item" (click)="setSort('date_asc')">Date Ascending</button></li>
+                            <li><button class="dropdown-item" (click)="setSort('date_desc')">Date Descending</button></li>
+                        </ul>                                             
+                    </div>
+                    <!--Button for reset-->
+                    <button type="button" class="btn btn-danger" (click)="resetFilters()">Reset</button>
+                </form>
+            </div>
+        </div>
+        
+    <!-- Modal for filter-->
+    <div class="modal fade" id="filter" tabindex="-1" aria-labelledby="filterLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="filterLabel">Filter</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Wrap with a proper form tag -->
+                    <form [formGroup]="filterForm">
+                        <div class="col-12 my-2">
+                            <label for="statusFilter" class="form-label">Status</label>
+                            <select id="statusFilter" class="form-select" formControlName="status">
+                                <option value="" selected>All</option>
+                                <option value="Additional Info">Additional Info</option>
+                                <option value="Approved">Approved</option>
+                                <option value="Rejected">Rejected</option>
+                                <option value="Not Responded">Not Responded</option>
+                            </select>
+                        </div>
+                        <div class="col-12 my-2">
+                            <label for="fromDate" class="form-label">From Date</label>
+                            <input type="date" id="fromDate" class="form-control" formControlName="from_date">
+                        </div>
+                        <div class="col-12 my-2">
+                            <label for="toDate" class="form-label">To Date</label>
+                            <input type="date" id="toDate" class="form-control" formControlName="to_date">
+                        </div>
+                    </form>
+                </div>                            
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" (click)="applyFilters()" data-bs-dismiss="modal">Apply Filters</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Filter Button Modal ends here -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12 col-sm-12 col-md-12 overflow-x">
+                <!-- Employee travel request -->
+                <table class="table table-hover">
+                    <thead class="color-green">
+                        <tr class="table-dark">
+                            <th class="color-green d-none d-md-table-cell">Request Id</th>
+                            <th class="color-green">Employee Name</th>
+                            <th class="color-green">Purpose of Travel</th>
+                            <th class="color-green">Mode of Travel</th>
+                            <th class="color-green">Date Range</th>
+                            <th class="color-green">Employee Status</th>
+                            <th class="color-green">Manager Status</th>
+                            <th class="color-green">Admin Status</th>
+                            <th class="color-green">Options</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let request of request_data">
+                            <td class="d-none d-md-table-cell">{{request.request_id}}</td>
+                            <td>{{request.employee.first_name}} {{request.employee.last_name}}</td>
+                            <td>{{request.purpose_of_travel}}</td>
+                            <td>{{request.preferred_mode_of_travel}}</td>
+                            <td>{{request.travel_from}} <span><i class="fa fa-arrow-right"></i></span> {{request.travel_to}}</td>
+                            <td [ngClass]="{'text-danger': request.employee_status === 'cancelled'}">{{request.employee_status}}</td>
+                            <td [ngClass]="{'text-success': request.manager_status === 'Approved', 
+                            'text-danger': request.manager_status === 'Rejected',}">{{request.manager_status}}</td>
+                            <td>{{request.admin_status}}</td>
+                            <td>
+                                <button class="btn btn-info position-relative" (click)="getRequestId(request.request_id)">
+                                    <i class="fa-solid fa-eye"></i>
+                                    <span *ngIf="request.employee_response_to_manager" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                        1
+                                    </span>
+                                </button>
+                            </td>                            
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- Pagination -->
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-end">
+                    <li class="page-item disabled">
+                        <a class="page-link">Previous</a>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Next</a>
+                    </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+    </main>
+</div>
