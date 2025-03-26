@@ -1,0 +1,284 @@
+ <!-- Navigation Bar -->
+ <header class="container-fluid">
+    <div class="row">
+      <div class="col mb-3">
+        <nav class="navbar navbar-expand-md bg-dark navbar-dark fixed-top">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">
+                    <img src ="assets/ReflectionsLogo.da68fb05.svg" alt="company logo">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active color-green fw-bold" aria-current="page" routerLink="/employees/home">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link color-green fw-bold" aria-current="page" routerLink="/employees/new_request">New Requests</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav mb-2 mb-lg-0">
+                        <li class="nav-item">
+                          <button class="nav-link color-green fw-bold btn btn-link p-0 border-0" aria-current="page" (click)="logout()" >Logout</button>                        
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+      </div>
+    </div>
+</header>
+<!-- Main Content -->
+  <section class="container-fluid my-5">
+      <div class="row">
+          <div class="col-md-12 overflow-x">
+            <!-- Travel Requests Table -->
+              <table class="table table-hover mt-3">
+                  <thead class="color-green">
+                      <tr class="table-dark">
+                          <th class="color-green d-none d-md-table-cell">Request Id</th>
+                          <th class="color-green">Travel From</th>
+                          <th class="color-green">Travel To</th>
+                          <th class="color-green">Mode of Travel</th>
+                          <th class="color-green d-none d-md-table-cell">Date Range</th>
+                          <th class="color-green">Manager Status</th>
+                          <th class="color-green">Options</th>
+                          <th class="color-green">Admin Status</th>
+                          <th></th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let request of request_data">
+                      <td class="d-none d-md-table-cell">{{request.request_id}}</td>
+                      <td>{{request.from_location}}</td>
+                      <td>{{request.to_location}}</td>
+                      <td>{{request.preferred_mode_of_travel}}</td>
+                      <td class="d-none d-md-table-cell">{{request.travel_from}} <span><i class="fa fa-arrow-right"></i></span> {{request.travel_to}}</td>
+                      <td>
+                        <button data-bs-toggle="modal" (click)="openModal(request.request_id)" 
+                        [attr.data-bs-target]="request.manager_status === 'Approved' ? '#approved' : 
+                                               request.manager_status === 'Rejected' ? '#rejected' : 
+                                               request.manager_status === 'Additional Info' ? '#inprogress' : null"
+                            class="btn" [ngClass]="{
+                                'btn-outline-success': request.manager_status === 'Approved',
+                                'btn-outline-danger': request.manager_status === 'Rejected',
+                                'btn-outline-warning': request.manager_status === 'Additional Info',
+                                'btn-outline-secondary': request.manager_status === 'Not Responded'
+                              }">
+                              {{request.manager_status}}
+                        </button>
+                      </td>
+                      <td>
+                          <button class="btn btn-primary mx-1" data-bs-toggle="modal" data-bs-target="#viewModal" (click)="view_fn(request.request_id)">
+                            <i class="fa fa-eye" aria-hidden="true"></i>
+                          </button>
+                          <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" (click)="cancel_fn(request.request_id)">
+                              <i class="fa-solid fa-trash"></i>
+                          </button>
+                      </td>
+                      <td>
+                        <button class="btn px-2" 
+                        data-bs-toggle="modal"
+                        data-bs-target='#requestedinfo'
+                        (click)="openModal(request.request_id)"
+                            [ngClass]="{
+                            'btn-outline-success': request.admin_status === 'Closed',
+                            'btn-outline-secondary': request.admin_status === 'Open',
+                            'btn-outline-warning': request.admin_status === 'Requested Info'
+                          }">
+                          {{request.admin_status }}
+                        </button>
+                      </td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- Modal for Manager's additional info-->
+              <div class="modal fade" id="inprogress" tabindex="-1" aria-labelledby="inprogressLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="inprogressLabel">Additional Information</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p *ngIf="getSelectedRequest() as selected">
+                            {{ selected?.manager_additional_request || 'No manager note available.' }}
+                        </p>
+                        <div class="container">
+                          <form [formGroup]="employee_response">
+                            <label for="employee_response"></label>
+                            <textarea id="employee_response" formControlName="to_manager"></textarea>
+                          </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer" *ngIf="getSelectedRequest() as selected">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="submitResponse()">Submit</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Modal for Delete-->
+              <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true" (hidden.bs.modal)="onModalClose()">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="deleteModalLabel">Cancel Permanently</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <p>Are you sure you want cancel it permanently?</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                      <button type="button" class="btn btn-danger" (click)="confirm_cancel()"data-bs-dismiss="modal" >Delete</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Modal for View-->
+              <div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="viewModalLabel">Request Details</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <div *ngIf="getSelectedRequest() as selected">
+                        <table class="table table-bordered">
+                          <tbody>
+                            <tr>
+                              <th>Request ID</th>
+                              <td>{{ selected?.request_id }}</td>
+                            </tr>
+                            <tr>
+                              <th>Apply Date</th>
+                              <td>{{ selected?.apply_date }}</td>
+                            </tr>
+                            <tr>
+                              <th>From Location</th>
+                              <td>{{ selected?.from_location }}</td>
+                            </tr>
+                            <tr>
+                              <th>To Location</th>
+                              <td>{{ selected?.to_location }}</td>
+                            </tr>
+                            <tr>
+                              <th>Travelling Date</th>
+                              <td>{{ selected?.travel_from }} <span><i class="fa fa-arrow-right"></i></span> {{ selected?.travel_to }}</td>
+                            </tr>
+                            <tr>
+                              <th>Mode of Travel</th>
+                              <td>{{ selected?.preferred_mode_of_travel }}</td>
+                            </tr>
+                            <tr>
+                              <th>Is Lodging Required?</th>
+                              <td>{{ selected?.is_lodging_required===1 ? 'Yes' : 'No' }}</td>
+                            </tr>
+                            <tr>
+                              <th>Preferred Lodge</th>
+                              <td>{{ selected?.preferred_lodge || 'N/A' }}</td>
+                            </tr>
+                            <tr>
+                              <th>Purpose of Travel</th>
+                              <td>{{ selected?.purpose_of_travel }}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                    <div class="modal-footer" *ngIf="getSelectedRequest() as selected">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                      <button *ngIf="selected?.manager_status !== 'Approved' && selected?.manager_status !== 'Rejected'" 
+                      type="button" class="btn btn-warning" (click)="request_edit(selected?.request_id)" 
+                      data-bs-dismiss="modal">Edit</button>                    
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Modal for REjection-->
+              <div class="modal fade" id="rejected" tabindex="-1" aria-labelledby="rejectedLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="rejectedLabel">Rejected</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p *ngIf="getSelectedRequest() as selected">
+                            {{ selected?.manager_note || 'No manager note available.' }}
+                        </p>                    
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>              
+              <!-- Modal for approval-->
+              <div class="modal fade" id="approved" tabindex="-1" aria-labelledby="approvedLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="approvedLabel">Approved</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <p *ngIf="getSelectedRequest() as selected">
+                        {{ selected?.manager_note || 'No manager note available.' }}
+                      </p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Admin's additional info-->
+              <div class="modal fade" id="requestedinfo" tabindex="-1" aria-labelledby="requestedinfoLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="requestedinfoLabel">Additional Information</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p *ngIf="getSelectedRequest() as selected">
+                            {{ selected?.admin_note || 'No admin note available.' }}
+                        </p>
+                        <div class="container">
+                          <form [formGroup]="employee_response">
+                            <label for="employee_response"></label>
+                            <textarea id="employee_response" formControlName="to_admin"></textarea>
+                          </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-warning"(click)="submitAdminResponse()" data-bs-dismiss="modal">Submit</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Pagination -->
+              <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-end">
+                  <li class="page-item disabled">
+                    <a class="page-link">Previous</a>
+                  </li>
+                  <li class="page-item"><a class="page-link" href="#">1</a></li>
+                  <li class="page-item"><a class="page-link" href="#">2</a></li>
+                  <li class="page-item"><a class="page-link" href="#">3</a></li>
+                  <li class="page-item">
+                    <a class="page-link" href="#">Next</a>
+                  </li>
+                </ul>
+              </nav>
+          </div>
+      </div>
+  </section>
