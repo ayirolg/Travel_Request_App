@@ -1,0 +1,47 @@
+    <!-- Main Container -->
+<section class="roboto login-body">
+    <div class="container-fluid h-100 d-flex align-items-center justify-content-center">
+        <div class="row w-75 rounded p-3">
+            <div class="col-md-12">
+                <div class="card bg-white text-black p-0 rounded-end">
+                    <div class="row g-0">
+                        <!-- Logo col -->
+                        <div class="col-md-6 bg-black d-flex justify-content-center align-items-center p-1">
+                            <img src="assets/ReflectionsLogo.da68fb05.svg" class="img-fluid w-75" alt="Logo">
+                        </div>
+                        <!-- Login Form col -->
+                        <div class="col-md-6 d-flex align-items-center justify-content-center">
+                            <div class="w-100 p-4">
+                                <!-- 3 buttons for manager, admin, and employee login -->
+                                <div class="text-center mb-3">
+                                    <button class="btn btn-green mx-1 my-1"  
+                                        [ngClass]="{'border border-success border-2 fw-bold': (userType==='manager')}" 
+                                        (click)="setUserType('manager')">Manager</button>                    
+                                    <button class="btn btn-green mx-1 my-1" 
+                                        [ngClass]="{'border border-success border-2 fw-bold': (userType==='employee')}" 
+                                        (click)="setUserType('employee')">Employee</button>
+                                    <button class="btn btn-green mx-1 my-1" 
+                                        [ngClass]="{'border border-success border-2 fw-bold': (userType==='admin')}" 
+                                        (click)="setUserType('admin')">Admin</button>
+                                </div>
+                                <!-- Login Form -->
+                                <fieldset>
+                                    <legend class="text-center color-green fw-bold">LOGIN</legend>
+                                    <form [formGroup]="loginform">
+                                        <div class="mb-3">
+                                            <input type="text" formControlName="username" class="form-control rounded-pill p-3 shadow-sm" placeholder="Username" autofocus required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <input type="password" formControlName="password" class="form-control rounded-pill p-3 shadow-sm" placeholder="Password" required>
+                                        </div>
+                                        <button type="button" class="btn btn-green btn-lg w-100 rounded-pill fw-bold" [disabled]="!loginform.valid" (click)="signIn()">Sign in</button>
+                                    </form>
+                                </fieldset>
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
